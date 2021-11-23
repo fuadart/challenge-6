@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <title>User Game</title>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="/dashboard">Challenge 6</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/dashboard">Dashboard</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Menu
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="/menu/user-game">User Game</a></li>
+                      <li><a class="dropdown-item" href="/biodata">Biodata Game</a></li>
+                      <li><a class="dropdown-item" href="/history">History Game</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/role">Role User</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          
+           <!-- Button trigger modal -->
+          <div class="mt-4">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Add User
+            </button>
+          </div>
+          <div class="row mt-4">
+          <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">No</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+              <% users.forEach((users, index) => { %>
+                <tr>
+                <th scope="row"><%= index+1 %></th>
+                <td><%= users.username %></td>
+                <td><%= users.password %></td>
+                <td><%= users.role_id %></td>
+                <td>
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#edit<%= users.id %>">Edit</button>
+                  <form action="/menu/user-game/deleted-usergame" method="POST">
+                      <input type="text" name="id" value="<%= users.id %>" hidden>
+                      <button type="submit" class="btn btn-danger">Hapus</button>
+                  </form>
+                </td>
+                </tr>
+              <% })%>
+            </tbody>
+            </table>
+          </div>
+    </div>
+
+    <!-- Modal Add -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Tambah Akun</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+           <form action="/menu/user-game/create-usergame" method="POST">
+                <div class="mb-3">
+                  <label for="exampleUsername" class="form-label">Username</label>
+                  <input type="text" name="username" class="form-control" id="exampleUsername" aria-describedby="Usernameex">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
+                </div>
+                <select class="form-select" name="role" aria-label="Default select example" required>
+                  <option value="">Pilih Role</option>
+                  <% roles.forEach((roles) => { %>
+                  <option value="<%= roles.id %>"><%= roles.role %></option>
+                  <% })%>
+                </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Modal Edit -->
+    <% users.forEach((users, index) => { %>
+      <div class="modal fade" id="edit<%= users.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Users</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+               <form action="/menu/user-game/updated-usergame" method="POST">
+                  <input type="text" name="id" class="form-control" id="role" aria-describedby="Role" value="<%= users.id %>" hidden>
+                    <div class="mb-3">
+                      <label for="role" class="form-label">Username</label>
+                      <input type="text" name="username" class="form-control" id="exampleUsername" value="<%= users.username %>">
+                    </div>
+                    <select class="form-select" name="role" aria-label="Default select example" required>
+                      <option value="">Pilih Role</option>
+                      <% roles.forEach((roles) => { %>
+                      <option value="<%= roles.id %>"><%= roles.role %></option>
+                      <% })%>
+                    </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% })%>
+
+</body>
+</html>
